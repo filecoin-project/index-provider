@@ -14,7 +14,7 @@ const (
 )
 
 type AdminServer struct {
-	// Admin is the admin API listen address
+	// ListenMultiaddr is the admin API listen address.
 	ListenMultiaddr string
 	ReadTimeout     Duration
 	WriteTimeout    Duration

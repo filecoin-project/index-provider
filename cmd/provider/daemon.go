@@ -156,14 +156,12 @@ func daemonCommand(cctx *cli.Context) error {
 		adminserver.WithReadTimeout(time.Duration(cfg.AdminServer.ReadTimeout)),
 		adminserver.WithWriteTimeout(time.Duration(cfg.AdminServer.WriteTimeout)),
 	)
-
 	if err != nil {
 		return err
 	}
 	log.Infow("admin server initialized", "address", cfg.AdminServer.ListenMultiaddr)
 
 	errChan := make(chan error, 1)
-	fmt.Fprintf(cctx.App.ErrWriter, "Starting admin server on %s ...", cfg.AdminServer.ListenMultiaddr)
 	go func() {
 		errChan <- adminSvr.Start()
 	}()
@@ -185,6 +183,9 @@ func daemonCommand(cctx *cli.Context) error {
 		}
 		defer bootstrapper.Close()
 	}
+
+	fmt.Fprintf(cctx.App.Writer, "Admin server:    %s\n", cfg.AdminServer.ListenMultiaddr)
+	fmt.Fprintf(cctx.App.Writer, "Provider server: %s\n", cfg.ProviderServer.ListenMultiaddr)
 
 	var finalErr error
 	// Keep process running.
